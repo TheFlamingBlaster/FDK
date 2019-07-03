@@ -7,7 +7,7 @@
 	Licenced under the terms at: https://www.apache.org/licenses/LICENSE-2.0.txt
 --]]
 
-local baseClass = script.BaseClass
+local baseClass = require(script.BaseClass)
 local FDK = baseClass:New("Flame Development Toolkit")
 local external = FDK:Lock()
 local packages
