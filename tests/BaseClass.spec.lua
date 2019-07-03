@@ -45,13 +45,13 @@ return function()
 		it("Able to be extended", function()
 			local testClass1 = Class:New("Test1")
 
-			testClass.Test1 = function(self)
+			testClass1.Test1 = function(self)
 				self.testVar1 = true
 
 				return self
 			end
 
-			testClass.testFunction = function(self)
+			testClass1.testFunction = function(self)
 				return true
 			end
 
@@ -59,7 +59,7 @@ return function()
 
 			local testClass2 = testClass1:Extend("Test2")
 
-			testClass.testFunction2 = function(self)
+			testClass2.testFunction2 = function(self)
 				return true
 			end
 

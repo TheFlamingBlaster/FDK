@@ -16,9 +16,9 @@ local superLock
 superLock = function(tab) -- Allows the making of read-only tables through the use of newproxy
 	local proxy = { }
 
-	table.foreach(tab, function(i, k)
-		proxy[i] = k
-	end)
+	for i, v in pairs(tab) do
+		proxy[i] = v
+	end
 
 	setmetatable(proxy, { })
 
