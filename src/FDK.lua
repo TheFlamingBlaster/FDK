@@ -10,7 +10,15 @@
 local baseClass = script.BaseClass
 local FDK = baseClass:New("Flame Development Toolkit")
 local external = FDK:Lock()
-local packages = script.Packages
+local packages
+
+local serverTest = pcall(function() game:GetService("ServerScriptService") end)
+
+if serverTest then
+    packages = game:GetService("ServerScriptService").ServerPackages
+else
+    packages = game:GetService("ReplicatedStorage").ClientPackages
+end
 
 FDK.Import = function(importString)
 	local currentIndex = packages
