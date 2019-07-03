@@ -8,7 +8,7 @@
 local loadModules = {
 	{ "Source", "src" },
 	{ "Tests", "tests"},
-	{ "TestEZ", "modules/TestEZ/lib" }
+	{ "TestEZ", "modules/testez/lib" }
 }
 
 -- This makes sure we can load Lemur and other libraries that depend on init.lua

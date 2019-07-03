@@ -1,8 +1,8 @@
 --[[
 	Installer for Flame Development Toolkit. Version 0.1
-	
+
 	Allows for the easy automatic installation of FDK's branches.
-	
+
 	TheFlamingBlaster, 2019
 	Licenced under the terms at: https://www.apache.org/licenses/LICENSE-2.0.txt
 --]]
@@ -10,16 +10,16 @@
 local toolbar = plugin:CreateToolbar("Import FDK")
 
 local master = {
-	["BaseClass"] = 
-		"https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/BaseClass.lua", 
-	["FDK"] = 
+	["BaseClass"] =
+		"https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/BaseClass.lua",
+	["FDK"] =
 		"https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/FDK.lua"
 }
 -- Where the sources for each branch are located.
 --local dev = { } ::TODO
 --local legacy = { } ::TODO
 
-local masterButton = toolbar:CreateButton("Import Master", 
+local masterButton = toolbar:CreateButton("Import Master",
 	"Imports the master FDK enviroment into ReplicatedStorage." ..
 	" This one should be stable and fully functional.", "")
 --local newPackageButton = toolbar:CreateButton("New Package") ::TODO
@@ -56,14 +56,14 @@ local function uninstall() -- Auto-remove FDK if it exists. Packages are preserv
 end
 
 local function getHttp(url, cache)
-	local testHttp = pcall(function() 
-		hs:GetAsync("https://google.com") 
+	local testHttp = pcall(function()
+		hs:GetAsync("https://google.com")
 	end)
 
 	if testHttp == false then
-		return error("Enable http to import from GitHub.") -- Return a friendly error message if http is not enabled, otherwise return the response.
+		return error("Enable http to import from GitHub.") -- return error if Get failed
 	end
-	
+
 	local response = hs:GetAsync(url, cache)
 
 	return response

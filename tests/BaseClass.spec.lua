@@ -1,5 +1,5 @@
 return function()
-	local BaseClass = require(script.Parent.Parent.src.BaseClass)
+	local Class = require(script.Parent.Parent.src.BaseClass)
 
 	describe("BaseClass", function()
 		it("Able to create a class", function()

@@ -1,6 +1,6 @@
 stds.roblox = {
 	globals = {
-		"game"
+		"game", "plugin"
 	},
 
 	read_globals = {
@@ -10,7 +10,6 @@ stds.roblox = {
 		-- Extra functions
 		"tick", "warn", "spawn",
 		"wait", "settings", "typeof",
-		"foreach",
 
 		-- Types
 		"Vector2", "Vector3",
@@ -18,7 +17,11 @@ stds.roblox = {
 		"UDim", "UDim2",
 		"CFrame",
 		"Enum",
-		"Instance"
+		"Instance",
+
+		table = {
+			"foreach"
+		}
 	}
 }
 
@@ -40,6 +43,7 @@ ignore = {
 }
 
 std = "lua51+roblox"
+allow_defined = true
 
 files["**/*.spec.lua"] = {
 	std = "+testez",
