@@ -24,7 +24,9 @@
 
 ## Setup
 Install the FDK module into ReplicatedStorage. The easiest way to do this is to the use FDK installer plugin, which can be found at:
+
 Roblox Plugin: https://www.roblox.com/library/3410089003/FDK-Installer
+
 Source: https://github.com/TheFlamingBlaster/FDK/blob/master/src/Plugin.lua
 
 After this is complete, click the "Install Master" button on the FDK toolbar.
