@@ -30,6 +30,8 @@ superLock = function(tab) -- Allows the making of read-only tables through the u
 		return tab[k]
 	end
 
+	getmetatable(proxy).__call = internal.__new
+
 	getmetatable(proxy).__newindex = function()
 		return error("[FDK - CLASS LOCK] Table locked for new indexes.")
 	end
