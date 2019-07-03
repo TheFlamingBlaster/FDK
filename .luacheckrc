@@ -17,11 +17,7 @@ stds.roblox = {
 		"UDim", "UDim2",
 		"CFrame",
 		"Enum",
-		"Instance",
-
-		table = {
-			"foreach"
-		}
+		"Instance"
 	}
 }
 
@@ -43,7 +39,6 @@ ignore = {
 }
 
 std = "lua51+roblox"
-allow_defined = true
 
 files["**/*.spec.lua"] = {
 	std = "+testez",
