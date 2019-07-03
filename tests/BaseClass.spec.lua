@@ -79,7 +79,7 @@ return function()
 			local lockedTestClass = testClass:Lock()
 
 			expect(lockedTestClass.testVar1).to.equal(1)
-			expect(getmetatable(lockedTestClass).__metatable).to.equal("Locked.")
+			expect(getmetatable(lockedTestClass)).to.equal("Locked.")
 			expect(function()
 				lockedTestClass.testVar2 = 2
 			end).to.throw()
