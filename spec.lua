@@ -8,7 +8,7 @@
 local loadModules = {
 	{ "Source", "src" },
 	{ "Tests", "tests"},
-	{ "TestEZ", "modules/TestEZ/lib" }
+	{ "TestEZ", "modules/testez/lib" }
 }
 
 -- This makes sure we can load Lemur and other libraries that depend on init.lua
@@ -37,7 +37,7 @@ end
 -- Load TestEZ and run our tests
 local TestEZ = habitat:require(Root.TestEZ)
 
-local results = TestEZ.TestBootstrap:run(Root.RDMTests:GetChildren(), TestEZ.Reporters.TextReporter)
+local results = TestEZ.TestBootstrap:run(Root.Tests:GetChildren(), TestEZ.Reporters.TextReporter)
 
 -- Did something go wrong?
 if (results.failureCount > 0) then

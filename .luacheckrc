@@ -1,6 +1,6 @@
 stds.roblox = {
 	globals = {
-		"game"
+		"game", "plugin"
 	},
 
 	read_globals = {
@@ -10,7 +10,6 @@ stds.roblox = {
 		-- Extra functions
 		"tick", "warn", "spawn",
 		"wait", "settings", "typeof",
-		"foreach",
 
 		-- Types
 		"Vector2", "Vector3",

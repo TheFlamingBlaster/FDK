@@ -52,7 +52,7 @@ FDK.Import = function(importString)
 		local class = require(currentIndex)
 
 		if (typeof(class) ~= "function" and typeof(class) ~= "table") then
-			return error("[FDK - PACKAGE MANAGER] Expected function or table, got " 
+			return error("[FDK - PACKAGE MANAGER] Expected function or table, got "
 				.. typeof(class) .. " while initalizing class module.")
 		end
 

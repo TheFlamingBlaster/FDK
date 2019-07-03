@@ -16,9 +16,9 @@ local superLock
 superLock = function(tab) -- Allows the making of read-only tables through the use of newproxy
 	local proxy = { }
 
-	table.foreach(tab, function(i, k)
-		proxy[i] = k 
-	end)
+	for i, v in pairs(tab) do
+		proxy[i] = v
+	end
 
 	setmetatable(proxy, { })
 
@@ -77,7 +77,7 @@ baseClass.New = function(self, className) -- Generates a new metatable and table
 	local newClass = { }
 	local classProperties = { } -- Information about the class such as what other classes it inherits.
 
-	classProperties.ClassName = className 
+	classProperties.ClassName = className
 	classProperties.Inherits = {["FLAMECLASS"] = external}
 
 	local externalProperties = superLock(classProperties)

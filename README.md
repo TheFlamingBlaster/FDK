@@ -1,7 +1,10 @@
-<h1 align="center">Flame development toolkit</h1>
+<h1 align="center">Flame Development Toolkit</h1>
 <div align="center">
 	<a href="https://github.com/TheFlamingBlaster/FDK/tree/master/LICENSE">
 		<img src="https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?style=flat-square" alt="Lisence" />
+	</a>
+	<a href="https://travis-ci.com/TheFlamingBlaster/FDK">
+		<img src="https://img.shields.io/travis/com/TheFlamingBlaster/FDK.svg?style=flat-square" alt="Travis" />
 	</a>
 </div>
 
@@ -90,11 +93,13 @@ end
 
 Packages can be located in folders and subfolders. You can index them using "."
 
-![Image]("https://i.imgur.com/AKaQ2DE.png", "Folder Structure")
+<img src="/images/FolderStructure.png"
+     alt="Folder Structure"
+     style="float: left; margin-right: 10px;" />
 
 In this example, you could import camera by importing game.user.camera
 ```lua
-import("game.user.camera")
+import("game.usr.camera")
 ```
 ## Examples
 
