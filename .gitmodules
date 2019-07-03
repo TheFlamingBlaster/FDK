@@ -1,0 +1,6 @@
+[submodule "Modules/Lemur"]
+	path = modules/Lemur
+	url = https://github.com/LPGhatguy/lemur
+[submodule "Modules/TestEZ"]
+	path = modules/TestEZ
+	url = https://github.com/Roblox/testez/

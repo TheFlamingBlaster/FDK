@@ -6,8 +6,8 @@
 --]]
 local hs = game:GetService("HttpService")
 
-local classPath = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/BaseClass.lua" -- Where the base class will be loaded from. 
-local fdkPath = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/FDK.lua" -- Where FDK is loaded from.
+local classPath = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/BaseClass.lua" -- Where the base class will be loaded from. 
+local fdkPath = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/FDK.lua" -- Where FDK is loaded from.
 
 baseClass = loadstring(hs:GetAsync(classPath))()
 fdk = loadstring(hs:GetAsync(fdkPath))
