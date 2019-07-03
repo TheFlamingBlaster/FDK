@@ -12,12 +12,11 @@ local FDK = baseClass:New("Flame Development Toolkit")
 local external = FDK:Lock()
 local packages
 
-local serverTest = pcall(function() game:GetService("ServerScriptService") end)
 
-if serverTest then
-    packages = game:GetService("ServerScriptService").ServerPackages
-else
+if game:GetService("RunService"):IsClient() == true then
     packages = game:GetService("ReplicatedStorage").ClientPackages
+else
+    packages = game:GetService("ServerScriptService").ServerPackages
 end
 
 FDK.Import = function(importString)
