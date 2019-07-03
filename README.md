@@ -1,4 +1,4 @@
-<h1 align="center">Flame development toolkit</h1>
+<h1 align="center">Flame Development Toolkit</h1>
 <div align="center">
 	<a href="https://github.com/TheFlamingBlaster/FDK/tree/master/LICENSE">
 		<img src="https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?style=flat-square" alt="Lisence" />
