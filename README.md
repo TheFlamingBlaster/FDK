@@ -96,7 +96,7 @@ Packages can be located in folders and subfolders. You can index them using "."
 
 In this example, you could import camera by importing game.user.camera
 ```lua
-import("game.user.camera")
+import("game.usr.camera")
 ```
 ## Examples
 
