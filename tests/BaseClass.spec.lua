@@ -76,16 +76,9 @@ return function()
 
 			testClass.testVar1 = 1
 
-			testClass.Test = function(self)
-				self.testVar2 = 1
-
-				return self
-			end
-
 			local lockedTestClass = testClass:Lock()
 
 			expect(lockedTestClass.testVar1).to.equal(1)
-			expect(lockedTestClass().testVar2).to.equal(1)
 			expect(getmetatable(lockedTestClass).__metatable).to.equal("Locked.")
 			expect(function()
 				lockedTestClass.testVar2 = 2
