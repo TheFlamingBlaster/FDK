@@ -10,6 +10,7 @@ stds.roblox = {
 		-- Extra functions
 		"tick", "warn", "spawn",
 		"wait", "settings", "typeof",
+		"foreach"
 
 		-- Types
 		"Vector2", "Vector3",
@@ -21,7 +22,7 @@ stds.roblox = {
 	}
 }
 
-stds.TestEZ = {
+stds.testez = {
 	read_globals = {
 		"describe",
 		"it", "itFOCUS", "itSKIP",
@@ -41,5 +42,5 @@ ignore = {
 std = "lua51+roblox"
 
 files["**/*.spec.lua"] = {
-	std = "+TestEZ",
+	std = "+testez",
 }

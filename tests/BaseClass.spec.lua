@@ -88,4 +88,4 @@ return function()
 			expect(lockedTestClass.testVar2).never.to.be.ok()
 		end)
 	end)
-end)
+end
