@@ -5,8 +5,8 @@
 	Licenced under the terms at: https://www.apache.org/licenses/LICENSE-2.0.txt
 --]]
 
-local classPath = "" -- Where the base class will be loaded from. 
-local fdkPath = "" -- Where FDK is loaded from.
+local classPath = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/BaseClass.lua" -- Where the base class will be loaded from. 
+local fdkPath = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/FDK.lua" -- Where FDK is loaded from.
 
 baseClass = loadstring(classPath)()
 fdk = loadstring(fdkPath)()
