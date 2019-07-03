@@ -88,6 +88,14 @@ return function()
 end
 ```
 
+Packages can be located in folders and subfolders. You can index them using "."
+
+![Image]("https://i.imgur.com/AKaQ2DE.png", "Folder Structure")
+
+In this example, you could import camera by importing game.user.camera
+```lua
+import("game.user.camera")
+```
 ## Examples
 
 ## How to contribute
