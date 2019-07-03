@@ -14,25 +14,27 @@ local packages = script.Packages
 
 FDK.Import = function(importString)
 	local currentIndex = packages
-	if typeof(importString) ~= "string" then
+
+	if (typeof(importString) ~= "string") then
 		return error("[FDK - PACKAGE MANAGER] Expected string, got "..typeof(importString))
 	end
 	
-	if importString == "fdk" then
+	if (importString == "fdk") then
 		return external
 	end
 	
-	if importString == "Class" then
+	if (importString == "Class") then
 		return baseClass
 	end
 	
-	local tab = {}
+	local tab = { }
+
 	for x in string.gmatch(importString, "%a+") do
 		tab[#tab + 1] = x
 	end
 	
 	for i, v in pairs(tab) do
-		if currentIndex[v] then
+		if (currentIndex[v]) then
 			currentIndex = currentIndex[v]
 		else
 			return error("[FDK - PACKAGE MANAGER] Package does not exist.")
@@ -40,20 +42,22 @@ FDK.Import = function(importString)
 	end
 	
 	
-	if currentIndex:IsA("ModuleScript") then
+	if (currentIndex:IsA("ModuleScript")) then
 		local class = require(currentIndex)
-		if typeof(class) ~= "function" and typeof(class) ~= "table" then
+
+		if (typeof(class) ~= "function" and typeof(class) ~= "table") then
 			return error("[FDK - PACKAGE MANAGER] Expected function or table, got "..typeof(class).." while initalizing class module.")
 		end
 			
 		FDK.WrapEnv(class)
+
 		return class(), currentIndex.Name
 	end
 	
-	if currentIndex:IsA("NumberValue") or currentIndex:IsA("IntValue") then
-		
+	if (currentIndex:IsA("NumberValue") or currentIndex:IsA("IntValue")) then
 		local class = require(currentIndex.Value)
-		if typeof(class) ~= "function" and typeof(class) ~= "table" then
+
+		if (typeof(class) ~= "function" and typeof(class) ~= "table") then
 			return error("[FDK - PACKAGE MANAGER] Expected function or table, got "..typeof(class).." while initalizing class module.")
 		end
 		
@@ -67,21 +71,25 @@ end
 
 FDK.WrapEnv = function(func)
 	local funcEnv
-	if typeof(func) == "function" then
+
+	if (typeof(func) == "function") then
 		funcEnv = getfenv(func)
 	end
-	if typeof(func) == "table" then
+
+	if (typeof(func) == "table") then
 		funcEnv = func
 	end
 	
-	if not funcEnv then
+	if (not funcEnv) then
 		return error("[FDK - PACKAGE MANAGER] Expected function or table, got "..typeof(funcEnv)..".")
 	end
 	
 	funcEnv.import = function(importString)
 		local class, name = FDK.Import(importString)
+
 		return class, name
 	end
+
 	funcEnv.Class = baseClass
 	funcEnv.new = FDK.New
 end
