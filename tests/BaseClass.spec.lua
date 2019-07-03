@@ -47,9 +47,9 @@ return function()
 		it("Able to be extended", function()
 			local testClass1 = Class:New("Test1")
 
-			testClass1.Test1 = function(self)
-				self.testVar1 = true
+			testClass1.testVar1 = true
 
+			testClass1.Test1 = function(self)
 				return self
 			end
 
@@ -74,15 +74,18 @@ return function()
 		it("Able to be locked", function()
 			local testClass = Class:New("Test")
 
+			testClass.testVar1 = 1
+
 			testClass.Test = function(self)
-				self.testVar = 1
+				self.testVar2 = 1
 
 				return self
 			end
 
 			local lockedTestClass = testClass:Lock()
 
-			expect(lockedTestClass.testVar).to.equal(1)
+			expect(lockedTestClass.testVar1).to.equal(1)
+			expect(lockedTestClass().testVar2).to.equal(1)
 			expect(getmetatable(lockedTestClass).__metatable).to.equal("Locked.")
 			expect(function()
 				lockedTestClass.testVar2 = 2
