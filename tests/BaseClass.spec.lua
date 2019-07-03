@@ -17,7 +17,7 @@ return function()
 			end
 
 			expect(testClass.Test).to.be.a("function")
-			expect(testClass().equals(testClass)).to.equal(true)
+			expect(testClass():equals(testClass)).to.equal(true)
 		end)
 
 		it("Able to have a variable", function()

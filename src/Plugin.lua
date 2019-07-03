@@ -10,14 +10,14 @@
 local toolbar = plugin:CreateToolbar("Import FDK")
 
 local master = {
-	["BaseClass"] = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/BaseClass.lua", 
+	["BaseClass"] = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/BaseClass.lua",
 	["FDK"] = "https://raw.githubusercontent.com/TheFlamingBlaster/FDK/master/src/FDK.lua"
 }
 -- Where the sources for each branch are located.
 -- local dev = { } :: TODO
 -- local legacy = { } :: TODO
 
-local masterButton = toolbar:CreateButton("Import Master", "Imports the master FDK enviroment into ReplicatedStorage." ..
+local masterButton = toolbar:CreateButton("Import Master", "Imports the master FDK enviroment into ReplicatedStorage."..
 	"This one should be stable and fully functional.", "")
 local newPackageButton = toolbar:CreateButton("New Package", "Creates a new package", "")
 -- Add the toolbar button to import.
