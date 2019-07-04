@@ -6,18 +6,25 @@
 	TheFlamingBlaster, 2019
 	Licenced under the terms at: https://www.apache.org/licenses/LICENSE-2.0.txt
 --]]
-
-local baseClass = require(script.BaseClass)
-local FDK = baseClass:New("Flame Development Toolkit")
-local external = FDK:Lock()
+local baseClass
 local packages
 
+if (__LEMUR__  == nil) then -- checking if this is lemur
+	if game:GetService("RunService"):IsClient() == true then
+	    packages = game:GetService("ReplicatedStorage").ClientPackages
+	else
+	    packages = game:GetService("ServerScriptService").ServerPackages
+	end
 
-if game:GetService("RunService"):IsClient() == true then
-    packages = game:GetService("ReplicatedStorage").ClientPackages
-else
-    packages = game:GetService("ServerScriptService").ServerPackages
+	baseClass = require(script.BaseClass)
+elseif (__LEMUR__ == true) then
+	packages = script.Parent.Parent.tests -- setting the packages to be the tests
+	baseClass = require(script.Parent.BaseClass)
+
 end
+
+local FDK = baseClass:New("Flame Development Toolkit")
+local external = FDK:Lock()
 
 FDK.Import = function(importString)
 	local currentIndex = packages
@@ -26,7 +33,7 @@ FDK.Import = function(importString)
 		return error("[FDK - PACKAGE MANAGER] Expected string, got "..typeof(importString))
 	end
 
-	if (importString == "fdk") then
+	if (importString == "FDK") then
 		return external
 	end
 

@@ -17,7 +17,13 @@ stds.roblox = {
 		"UDim", "UDim2",
 		"CFrame",
 		"Enum",
-		"Instance"
+		"Instance",
+
+		-- Lemur globals
+		"__LEMUR__",
+
+		-- FDK globals,
+		"Class", "import", "new"
 	}
 }
 

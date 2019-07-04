@@ -49,9 +49,7 @@ internal.equals = function(self, otherClass)
 	local props = internal.classes[otherClass]
 
 	if (props) then
-		if (self:isA(props.ClassName)) then
-			return true
-		end
+		return self:isA(props.ClassName)
 	end
 
 	return false
