@@ -7,7 +7,7 @@
 		<img src="https://img.shields.io/travis/com/TheFlamingBlaster/FDK.svg?style=flat-square" alt="Travis" />
 	</a>
 	<a href="https://coveralls.io/github/TheFlamingBlaster/FDK?branch=master">
-		<img src="https://img.shields.io/coveralls/github/TheFlamingBlaster/RDM.svg?style=flat-square" alt="Coveralls" />
+		<img src="https://img.shields.io/coveralls/github/TheFlamingBlaster/FDK.svg?style=flat-square" alt="Coveralls" />
 	</a>
 </div>
 
