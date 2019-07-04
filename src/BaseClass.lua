@@ -39,7 +39,7 @@ superLock = function(tab) -- Allows the making of read-only tables through the u
 	end
 	
 	getmetatable(proxy).__call = function(self, ...)
-		return tab(tab, ...)
+		return tab(...):Lock()
 	end
 	
 	getmetatable(proxy).__metatable = "Locked."
