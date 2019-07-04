@@ -6,6 +6,9 @@
 	<a href="https://travis-ci.com/TheFlamingBlaster/FDK">
 		<img src="https://img.shields.io/travis/com/TheFlamingBlaster/FDK.svg?style=flat-square" alt="Travis" />
 	</a>
+	<a href="https://coveralls.io/github/TheFlamingBlaster/FDK?branch=master">
+		<img src="https://img.shields.io/coveralls/github/TheFlamingBlaster/FDK.svg?style=flat-square" alt="Coveralls" />
+	</a>
 </div>
 
 <div align="center">
