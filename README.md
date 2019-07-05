@@ -75,10 +75,10 @@ helloWorld.Hello() -- > Should print "Hello, world"
 Classes can have their variables carried over onto new classes by using the Extend() function of BaseClass.
 
 ```lua
-	local originalClass = Class:New("OriginalClass")
-	originalClass.Demo = true
-	local newClass = originalClass:Extend({})
-	print(newClass.Demo == true) --> Should return true.
+local originalClass = Class:New("OriginalClass")
+originalClass.Demo = true
+local newClass = originalClass:Extend({})
+print(newClass.Demo == true) --> Should return true.
 ```
 
 Like many other programming languages, classes can be initalised:
