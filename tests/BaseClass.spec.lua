@@ -88,6 +88,12 @@ return function()
 				}
 			}
 
+			testClass.Test = function(self)
+				self.callWorks = true
+
+				return self
+			end
+
 			local lockedTestClass = testClass:Lock()
 
 			expect(lockedTestClass.testVar1).to.equal(1)
@@ -121,6 +127,8 @@ return function()
 			expect(lockedTestClass["testTable1"]["test1"]).never.to.equal(false)
 			expect(lockedTestClass["testTable1"]["test"]).never.to.equal(false)
 			expect(lockedTestClass["testTable1"]["testTable2"]["test"]).never.to.equal(false)
+
+			expect(lockedTestClass()["callWorks"]).to.equal(true)
 		end)
 	end)
 
@@ -138,7 +146,7 @@ return function()
 		it("Non equal classes should return false", function()
 			local testClass = Class:New("Test")
 
-			expect(testClass == {}).to.equal(false)
+			expect(testClass == 'aasdasd').to.equal(false)
 		end)
 
 		it("IsA should return false if not inherited class", function()
@@ -149,6 +157,13 @@ return function()
 
 		it("Non registered classes should not be registered", function()
 			expect(Class.Registered({})).to.equal(false) -- Saves creating another class
+		end)
+
+		it("Each class should have the correct New and baseclass functions", function()
+			local testClass1, testClass2 = Class:New("Test1"), Class:New("Test2")
+
+			expect(testClass1["New"] == testClass2["New"]).to.equal(true)
+			expect(testClass1["New"] == Class["New"]).to.equal(true)
 		end)
 	end)
 
@@ -170,6 +185,30 @@ return function()
 				testClass:Extend({
 					["ClassName"] = "fail"
 				})
+			end).to.throw()
+		end)
+
+		it("Init function should fail with wrong class constructor", function()
+			local testClass = Class:New("Test")
+
+			testClass.testClass = function(self)
+				return self
+			end
+
+			testClass["ClassName"] = nil
+
+			expect(function()
+				testClass()
+			end).to.throw()
+		end)
+
+		it("Init function should fail with wrong class constructor", function()
+			local testClass = Class:New("Test")
+
+			testClass.testClass = 'asd'
+
+			expect(function()
+				testClass()
 			end).to.throw()
 		end)
 	end)
