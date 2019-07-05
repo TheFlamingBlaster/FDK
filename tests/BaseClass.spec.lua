@@ -82,18 +82,21 @@ return function()
 
 			testClass.testVar1 = 1
 			testClass.testTable1 = {
-				["test"] = true--,
-				--[[["testTable2"] = {
-					["test"] = false
-				}]]
+				["test"] = true,
+				["testTable2"] = {
+					["test"] = true
+				}
 			}
 
 			local lockedTestClass = testClass:Lock()
 
 			expect(lockedTestClass.testVar1).to.equal(1)
-			expect(lockedTestClass.testTable1["test"]).to.equal(true)
+			expect(lockedTestClass["testTable1"]["test"]).to.equal(true)
 
-			--expect(getmetatable(lockedTestClass.testTable1.testTable2)).to.equal("Locked.")
+			print(getmetatable(lockedTestClass.testVar1))
+
+			expect(getmetatable(lockedTestClass["testTable1"])).to.equal("Locked.")
+			expect(getmetatable(lockedTestClass["testTable1"]["testTable2"])).to.equal("Locked.")
 			expect(getmetatable(lockedTestClass)).to.equal("Locked.")
 
 			expect(tostring(lockedTestClass)).to.be.a("string")
@@ -102,12 +105,22 @@ return function()
 				lockedTestClass.testVar2 = 2
 			end).to.throw()
 
-			--[[expect(function()
-				lockedTestClass.testTable1["test"] = false
-			end).to.throw()]]
+			expect(function()
+				lockedTestClass["testTable1"]["test1"] = false
+			end).to.throw()
+
+			expect(function()
+				lockedTestClass["testTable1"]["test"] = false
+			end).to.throw()
+
+			expect(function()
+				lockedTestClass["testTable1"]["tesTable2"]["test"] = false
+			end).to.throw()
 
 			expect(lockedTestClass.testVar2).never.to.be.ok()
-			expect(lockedTestClass.testTable1).never.to.equal(false)
+			expect(lockedTestClass["testTable1"]["test1"]).never.to.equal(false)
+			expect(lockedTestClass["testTable1"]["test"]).never.to.equal(false)
+			expect(lockedTestClass["testTable1"]["testTable2"]["test"]).never.to.equal(false)
 		end)
 	end)
 
@@ -120,6 +133,12 @@ return function()
 			end
 
 			expect(testClass() == testClass).to.equal(true)
+		end)
+
+		it("Non equal classes should return false", function()
+			local testClass = Class:New("Test")
+
+			expect(testClass == {}).to.equal(false)
 		end)
 
 		it("IsA should return false if not inherited class", function()

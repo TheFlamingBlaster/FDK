@@ -17,34 +17,38 @@ superLock = function(tab) -- Allows the making of read-only tables through the u
 	local proxy = { }
 
 	for i, v in pairs(tab) do
-		proxy[i] = v
-	end
-
-	setmetatable(proxy, { })
-
-	getmetatable(proxy).__index = function(self, k)
-		if (typeof(tab[k]) == "table") then
-			return superLock(tab[k])
+		if (typeof(v) == "table") then
+			proxy[i] = superLock(v) -- This should be fixed as recursive is bad
+		else
+			proxy[i] = v
 		end
-
-		return tab[k]
 	end
 
-	getmetatable(proxy).__newindex = function()
-		return error("[FDK - CLASS LOCK] Table locked for new indexes.")
-	end
+	local proxyMeta = setmetatable({ }, {
+		__index = function(self, k)
+			if (typeof(tab[k]) == "table") then
+				return proxy[k]
+			end
 
-	getmetatable(proxy).__tostring = function()
-		return tostring(tab)
-	end
-	
-	getmetatable(proxy).__call = function(self, ...)
-		return tab(...):Lock()
-	end
-	
-	getmetatable(proxy).__metatable = "Locked."
+			return tab[k]
+		end,
 
-	return proxy
+		__newindex = function()
+			return error("[FDK - CLASS LOCK] Table locked for new indexes.")
+		end,
+
+		__tostring = function()
+			return tostring(tab)
+		end,
+
+		__call = function(self, ...)
+			return tab(...):Lock()
+		end,
+
+		__metatable = "Locked."
+	})
+
+	return proxyMeta
 end
 
 local external = superLock(baseClass)
