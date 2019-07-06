@@ -23,7 +23,7 @@ stds.roblox = {
 		"__LEMUR__",
 
 		-- FDK globals,
-		"Class", "import", "new"
+		"BaseClass", "import", "new"
 	}
 }
 

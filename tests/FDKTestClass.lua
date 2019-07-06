@@ -1,5 +1,5 @@
 return function()
-	local testClass = Class:New("Test")
+	local testClass = BaseClass:new("Test")
 
 	testClass.testVar1 = 1
 
@@ -9,6 +9,7 @@ return function()
 
 	testClass.Test = function(self)
 		self.testVar2 = 2
+
 		self.testFunction2 = function(self)
 			return 2
 		end

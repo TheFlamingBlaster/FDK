@@ -1,113 +1,132 @@
 --[[
-	Flame Development Toolkit, Version 1.0.0
+	Main module for FDK package management.
 
-	Main module for package management.
-
-	TheFlamingBlaster, 2019
 	Licenced under the terms at: https://www.apache.org/licenses/LICENSE-2.0.txt
 --]]
-local baseClass
+local BaseClass
 local packages
 
-if (__LEMUR__  == nil) then -- checking if this is lemur
-	if game:GetService("RunService"):IsClient() == true then
-	    packages = game:GetService("ReplicatedStorage").ClientPackages
-	else
-	    packages = game:GetService("ServerScriptService").ServerPackages
-	end
+-- This is here checking if its Lemur and where the packages/baseclass are
+if (__LEMUR__ == nil) then
+	packages = (game:GetService("RunService"):IsClient() and
+		game:GetService("ReplicatedStorage"):FindFirstChild("ClientPackages") or
+		game:GetService("ServerScriptService"):FindFirstChild("ServerPackages"))
 
-	baseClass = require(script.BaseClass)
-elseif (__LEMUR__ == true) then
-	packages = script.Parent.Parent.tests -- setting the packages to be the tests
-	baseClass = require(script.Parent.BaseClass)
-
+	BaseClass = require(script.BaseClass)
+else
+	packages = script.Parent.Parent.tests
+	BaseClass = require(script.Parent.BaseClass)
 end
 
-local FDK = baseClass:New("Flame Development Toolkit")
-local external = FDK:Lock()
+local FDK = BaseClass:new("Flaming Development Toolkit")
+local external = FDK:lock()
 
-FDK.Import = function(importString)
-	local currentIndex = packages
+--[[
+	Function: Checks the object against any types given. cleans code up
+	Arguments: object - check against, ... - types
+]]
+local function checkTypes(object, ...)
+	local typeOfObject = typeof(object)
 
-	if (typeof(importString) ~= "string") then
+	for _, check in pairs({ ... }) do
+		if (typeOfObject == check) then
+			return true
+		end
+	end
+
+	return false
+end
+
+--[[
+	Function: Creates a new class from the class name
+	Arguments: self - FDK, importString - what is wanted to be imported
+]]
+FDK.import = function(self, importString)
+	if (not checkTypes(importString, "string") or string.len(importString) == 0) then
 		return error("[FDK - PACKAGE MANAGER] Expected string, got "..typeof(importString))
 	end
 
 	if (importString == "FDK") then
 		return external
+	elseif (importString == "BaseClass" or importString == "Class") then
+		return BaseClass
 	end
 
-	if (importString == "Class") then
-		return baseClass
+	local currentIndex, splitImportString, toRequire =
+		packages, { }, nil
+
+	for directory in string.gmatch(importString, "%a+") do
+		table.insert(splitImportString, directory)
 	end
 
-	local tab = { }
-
-	for x in string.gmatch(importString, "%a+") do
-		tab[#tab + 1] = x
-	end
-
-	for _, v in pairs(tab) do
-		if (currentIndex[v]) then
-			currentIndex = currentIndex[v]
+	for _, directory in pairs(splitImportString) do
+		if (currentIndex:FindFirstChild(directory)) then
+			currentIndex = currentIndex[directory]
 		else
-			return error("[FDK - PACKAGE MANAGER] Package does not exist.")
+			return error("[FDK - PACKAGE MANAGER] Package " .. directory .. " does not exist.")
 		end
-	end
-
-	if (currentIndex:IsA("ModuleScript")) then
-		local class = require(currentIndex)
-
-		if (typeof(class) ~= "function" and typeof(class) ~= "table") then
-			return error("[FDK - PACKAGE MANAGER] Expected function or table, got "
-				.. typeof(class) .. " while initalizing class module.")
-		end
-
-		FDK.WrapEnv(class)
-
-		return class(), currentIndex.Name
 	end
 
 	if (currentIndex:IsA("NumberValue") or currentIndex:IsA("IntValue")) then
-		local class = require(currentIndex.Value)
-
-		if (typeof(class) ~= "function" and typeof(class) ~= "table") then
-			return error("[FDK - PACKAGE MANAGER] Expected function or table, got "
-				.. typeof(class) .." while initalizing class module.")
-		end
-
-		FDK.WrapEnv(class)
-
-		return class(), currentIndex.Name
+		toRequire = currentIndex.Value
+	elseif (currentIndex:IsA("ModuleScript")) then
+		toRequire = currentIndex
 	end
 
-	return error("[FDK - PACKAGE MANAGER] Package does not exist.")
+	if (toRequire == nil) then
+		return error("[FDK - PACKAGE MANAGER] Package does not exist.")
+	end
+
+	local class = require(toRequire)
+
+	if (not checkTypes(class, "table", "function")) then
+		return error("[FDK - PACKAGE MANAGER] Expected function or table, got "
+			.. typeof(class) .. " while initalizing class module.")
+	end
+
+	self:wrapEnvironment(class)
+
+	return class(), currentIndex.Name -- Should we be calling the class?
 end
 
-FDK.WrapEnv = function(func)
-	local funcEnv
+--[[
+	Function: Wraps the provided enviroment with useful FDK functions
+	Arguments: self - FDK, value - table/function given for the enviroment
+]]
+FDK.wrapEnvironment = function(self, value)
+	local useValue = (value == nil and self or value)
 
-	if (typeof(func) == "function") then
-		funcEnv = getfenv(func)
+	local functionEnviorment
+
+	if (checkTypes(useValue, "function")) then
+		functionEnviorment = getfenv(useValue)
+	elseif (checkTypes(useValue, "table")) then
+		functionEnviorment = useValue
 	end
 
-	if (typeof(func) == "table") then
-		funcEnv = func
+	if (functionEnviorment == nil) then
+		return error("[FDK - PACKAGE MANAGER] Expected function or table, got " .. typeof(functionEnviorment) .. ".")
 	end
 
-	if (not funcEnv) then
-		return error("[FDK - PACKAGE MANAGER] Expected function or table, got "..typeof(funcEnv)..".")
-	end
-
-	funcEnv.import = function(importString)
-		local class, name = FDK.Import(importString)
+	functionEnviorment.import = function(importString)
+		local class, name = self:import(importString)
 
 		return class, name
 	end
 
-	funcEnv.Class = baseClass
-	funcEnv.new = FDK.New
+	functionEnviorment.BaseClass = BaseClass
+	functionEnviorment.new = FDK.new
+
+	--Legacy Support
+	functionEnviorment.Class = BaseClass
+	functionEnviorment.New = FDK.new
+	--Legacy Support
 end
+
+--Legacy Support
+FDK.WrapEnv = FDK.wrapEnvironment
+FDK.Import = FDK.import
+--Legacy Support
 
 _G.FDK = external
 

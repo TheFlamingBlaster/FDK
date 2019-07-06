@@ -1,222 +1,252 @@
 return function()
-	local Class = require(script.Parent.Parent.src.BaseClass)
+	local BaseClass = require(script.Parent.Parent.src.BaseClass)
+	local TestClass = BaseClass:new("TestClass")
+	local TestClass2 = TestClass:extend("TestClass2")
 
-	describe("Class checking", function()
-		it("Able to create a class", function()
-			local testClass = Class:New("Test")
-
-			expect(testClass).to.be.ok()
-			expect(testClass:Registered()).to.equal(true)
+	describe("Class", function()
+		it("Should be ok", function()
+			expect(TestClass).to.be.ok()
 		end)
 
-		it("Able to have an init function", function()
-			local testClass = Class:New("Test")
-
-			testClass.Test = function(self)
+		it("Init function should be ok", function()
+			TestClass.TestClass = function(self)
 				return self
 			end
 
-			expect(testClass.Test).to.be.a("function")
-
 			expect(function()
-				testClass()
+				TestClass()
 			end).never.to.throw()
 		end)
 
-		it("Able to have a variable", function()
-			local testClass = Class:New("Test")
+		it("Variables should be ok", function()
+			TestClass.testVar1 = true
 
-			testClass.Test = function(self)
-				self.testVar = true
-
-				return self
-			end
-
-			expect(testClass().testVar).to.equal(true)
+			expect(TestClass.testVar1).to.equal(true)
 		end)
 
-		it("Able to have a function", function()
-			local testClass = Class:New("Test")
-
-			testClass.testFunction = function(self)
+		it("Functions should be ok", function()
+			TestClass.testFunction1 = function(self)
 				return true
 			end
 
-			expect(testClass:testFunction()).to.equal(true)
+			expect(TestClass.testFunction1()).to.equal(true)
 		end)
 
-		it("Able to be extended", function()
-			local testClass1 = Class:New("Test1")
+		describe("Function", function()
+			it("Registered should work", function()
+				expect(TestClass:registered()).to.equal(true)
+				expect(BaseClass:registered(TestClass)).to.equal(true)
+			end)
 
-			testClass1.testVar1 = true
+			it("IsA should work", function()
+				expect(TestClass2:isA("TestClass")).to.equal(true)
+			end)
 
-			testClass1.Test1 = function(self)
-				return self
-			end
+			it("Equals should work", function()
+				expect(TestClass2 == TestClass).to.equal(true)
+			end)
 
-			testClass1.testFunction = function(self)
-				return true
-			end
+			describe("Metamethod", function()
+				TestClass2.__unm = function() return true end
+				TestClass2.__add = function() return true end
+				TestClass2.__sub = function() return true end
+				TestClass2.__mul = function() return true end
+				TestClass2.__div = function() return true end
+				TestClass2.__mod = function() return true end
+				TestClass2.__pow = function() return true end
 
-			testClass1()
+				it("Unary", function()
+					expect(-TestClass2).to.equal(true)
+				end)
 
-			local testClass2 = testClass1:Extend("Test2")
+				it("Add", function()
+					expect(TestClass2 + 1).to.equal(true)
+				end)
 
-			testClass2.testVar2 = true
+				it("Subtract", function()
+					expect(TestClass2 - 1).to.equal(true)
+				end)
 
-			testClass2.testFunction2 = function(self)
-				return true
-			end
+				it("Multiply", function()
+					expect(TestClass2 * 1).to.equal(true)
+				end)
 
-			expect(testClass2.testVar1).to.equal(true)
-			expect(testClass2.testVar2).to.equal(true)
+				it("Divide", function()
+					expect(TestClass2 / 1).to.equal(true)
+				end)
 
-			expect(testClass2:testFunction()).to.equal(true)
-			expect(testClass2:testFunction2()).to.equal(true)
+				it("Modulus", function()
+					expect(TestClass2 % 1).to.equal(true)
+				end)
 
-			expect(testClass2:isA("Test1")).to.equal(true)
+				it("Exponet", function()
+					expect(TestClass2^1).to.equal(true)
+				end)
+			end)
 		end)
 
-		it("Able to be locked", function()
-			local testClass = Class:New("Test")
+		describe("Extend", function()
+			it("Should be ok", function()
+				expect(TestClass2).to.be.ok()
+			end)
 
-			testClass.testVar1 = 1
-			testClass.testTable1 = {
+			it("Should work in init function", function()
+				TestClass.TestClass = function(self)
+					self.testInitVar1 = true
+
+					return self
+				end
+
+				expect(TestClass().testInitVar1).to.equal(true)
+			end)
+
+			it("Should carry over variables", function()
+				TestClass.testExtendVar1 = true
+
+				expect(TestClass:extend("ExtendTestClass").testExtendVar1).to.equal(true)
+			end)
+
+			it("Should carry over functions", function()
+				TestClass.testExtendFunction1 = function()
+					return true
+				end
+
+				expect(TestClass:extend("ExtendTestClass2").testExtendFunction1()).to.equal(true)
+			end)
+		end)
+
+		describe("Lock", function()
+			local TestClass3 = BaseClass:new("TestClass3")
+
+			TestClass3.testVar1 = true
+			TestClass3.testTable1 = {
 				["test"] = true,
 				["testTable2"] = {
 					["test"] = true
 				}
 			}
 
-			testClass.Test = function(self)
+			TestClass3.TestClass3 = function(self)
 				self.callWorks = true
 
 				return self
 			end
 
-			local lockedTestClass = testClass:Lock()
+			local LockedClass3 = TestClass3:lock()
+			local LockedMetamethodClass = TestClass2:lock()
 
-			expect(lockedTestClass.testVar1).to.equal(1)
-			expect(lockedTestClass["testTable1"]["test"]).to.equal(true)
+			it("Should be ok", function()
+				expect(LockedClass3).to.be.ok()
+			end)
 
-			print(getmetatable(lockedTestClass.testVar1))
+			it("Should access variables correctly", function()
+				expect(LockedClass3.testVar1).to.equal(true)
+				expect(LockedClass3.testTable1.test).to.equal(true)
+			end)
 
-			expect(getmetatable(lockedTestClass["testTable1"])).to.equal("Locked.")
-			expect(getmetatable(lockedTestClass["testTable1"]["testTable2"])).to.equal("Locked.")
-			expect(getmetatable(lockedTestClass)).to.equal("Locked.")
+			it("Should have all tables locked", function()
+				expect(getmetatable(LockedClass3)).to.equal("B-Locked.")
+				expect(getmetatable(LockedClass3["testTable1"])).to.equal("B-Locked.")
+				expect(getmetatable(LockedClass3["testTable1"]["testTable2"])).to.equal("B-Locked.")
+			end)
 
-			expect(tostring(lockedTestClass)).to.be.a("string")
+			it("Should throw on newindex", function()
+				expect(function()
+					LockedClass3.testVar2 = 2
+				end).to.throw()
 
-			expect(function()
-				lockedTestClass.testVar2 = 2
-			end).to.throw()
+				expect(function()
+					LockedClass3.testTable1.test1 = false
+				end).to.throw()
 
-			expect(function()
-				lockedTestClass["testTable1"]["test1"] = false
-			end).to.throw()
+				expect(function()
+					LockedClass3.testTable1.test = false
+				end)
 
-			expect(function()
-				lockedTestClass["testTable1"]["test"] = false
-			end).to.throw()
+				expect(function()
+					LockedClass3.testTable1.testTable2.test = false
+				end)
+			end)
 
-			expect(function()
-				lockedTestClass["testTable1"]["tesTable2"]["test"] = false
-			end).to.throw()
+			it("Should use the init function correctly", function()
+				expect(LockedClass3()["callWorks"]).to.equal(true)
+			end)
 
-			expect(lockedTestClass.testVar2).never.to.be.ok()
-			expect(lockedTestClass["testTable1"]["test1"]).never.to.equal(false)
-			expect(lockedTestClass["testTable1"]["test"]).never.to.equal(false)
-			expect(lockedTestClass["testTable1"]["testTable2"]["test"]).never.to.equal(false)
+			describe("Metamethods", function()
+				it("Unary", function()
+					expect(-LockedMetamethodClass).to.equal(true)
+				end)
 
-			expect(lockedTestClass()["callWorks"]).to.equal(true)
-		end)
-	end)
+				it("Add", function()
+					expect(LockedMetamethodClass + 1).to.equal(true)
+				end)
 
-	describe("Function checking", function()
-		it("Able to be checked against", function()
-			local testClass = Class:New("Test")
+				it("Subtract", function()
+					expect(LockedMetamethodClass - 1).to.equal(true)
+				end)
 
-			testClass.Test = function(self)
-				return self
-			end
+				it("Multiply", function()
+					expect(LockedMetamethodClass * 1).to.equal(true)
+				end)
 
-			expect(testClass() == testClass).to.equal(true)
-		end)
+				it("Divide", function()
+					expect(LockedMetamethodClass / 1).to.equal(true)
+				end)
 
-		it("Non equal classes should return false", function()
-			local testClass = Class:New("Test")
+				it("Modulus", function()
+					expect(LockedMetamethodClass % 1).to.equal(true)
+				end)
 
-			expect(testClass == 1).to.equal(false)
-		end)
-
-		it("IsA should return false if not inherited class", function()
-			local testClass = Class:New("Test")
-
-			expect(testClass:isA("TestParent")).to.equal(false)
-		end)
-
-		it("Non registered classes should not be registered", function()
-			expect(Class.Registered({})).to.equal(false) -- Saves creating another class
-		end)
-
-		it("Each class should have the correct baseclass functions", function()
-			local testClass1, testClass2 = Class:New("Test1"), Class:New("Test2")
-
-			expect(testClass1["New"] == testClass2["New"]).to.equal(true)
-			expect(testClass1["New"] == Class["New"]).to.equal(true)
-		end)
-
-		it("Each extended class should have the correct baseclass functions", function()
-			local testClass1, testClass2 = Class:New("Test1"):Extend("Test1Extend"), Class:New("Test2")
-
-			expect(testClass1["New"] == testClass2["New"]).to.equal(true)
-			expect(testClass1["New"] == Class["New"]).to.equal(true)
-		end)
-	end)
-
-	describe("Error checking", function()
-		it("New class should fail with incorrect arguments", function()
-			expect(function()
-				Class:New({})
-			end).to.throw()
+				it("Exponet", function()
+					expect(LockedMetamethodClass^1).to.equal(true)
+				end)
+			end)
 		end)
 
-		it("Extend should fail with wrong arguments", function()
-			local testClass = Class:New("Test")
+		describe("Error checking", function()
+			it("New class should fail with incorrect arguments", function()
+				expect(function()
+					BaseClass:New({})
+				end).to.throw()
+			end)
 
-			expect(function()
-				testClass.Extend({})
-			end).to.throw()
+			it("Extend should fail with wrong arguments", function()
+				local testClassFail = BaseClass:new("Test")
 
-			expect(function()
-				testClass:Extend({
-					["ClassName"] = "fail"
-				})
-			end).to.throw()
-		end)
+				expect(function()
+					testClassFail.Extend({})
+				end).to.throw()
 
-		it("Init function should fail with wrong class constructor", function()
-			local testClass = Class:New("Test")
+				expect(function()
+					testClassFail:Extend({
+						["ClassName"] = "fail"
+					})
+				end).to.throw()
+			end)
 
-			testClass.testClass = function(self)
-				return self
-			end
+			it("Init function should fail with wrong class constructor", function()
+				local testClassFail = BaseClass:new("Test")
 
-			testClass["ClassName"] = nil
+				testClassFail.Test = function(self)
+					return self
+				end
 
-			expect(function()
-				testClass()
-			end).to.throw()
-		end)
+				testClassFail["className"] = 'asdasdasdasd'
 
-		it("Init function should fail with init function given", function()
-			local testClass = Class:New("Test")
+				expect(function()
+					testClassFail()
+				end).to.throw()
+			end)
 
-			testClass.testClass = 'asd'
+			it("Init function should fail with init function given", function()
+				local testClassFail = BaseClass:new("Test")
 
-			expect(function()
-				testClass()
-			end).to.throw()
+				testClassFail.Test = 'asd'
+
+				expect(function()
+					testClassFail()
+				end).to.throw()
+			end)
 		end)
 	end)
 end
