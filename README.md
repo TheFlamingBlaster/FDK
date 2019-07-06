@@ -29,7 +29,7 @@
 4. [How to Contribute](#how-to-contribute)
 
 ## Setup
-Install the FDK module into ReplicatedStorage. The easiest way to do this is to the use FDK installer plugin, which can be found at:
+Install the FDK module in ReplicatedStorage. The easiest way to do this is to the use FDK installer plugin, which can be found at:
 
 Roblox Plugin: https://www.roblox.com/library/3410089003/FDK-Installer
 
