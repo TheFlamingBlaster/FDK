@@ -146,7 +146,7 @@ return function()
 		it("Non equal classes should return false", function()
 			local testClass = Class:New("Test")
 
-			expect(testClass == 'aasdasd').to.equal(false)
+			expect(testClass == 1).to.equal(false)
 		end)
 
 		it("IsA should return false if not inherited class", function()
@@ -159,8 +159,15 @@ return function()
 			expect(Class.Registered({})).to.equal(false) -- Saves creating another class
 		end)
 
-		it("Each class should have the correct New and baseclass functions", function()
+		it("Each class should have the correct baseclass functions", function()
 			local testClass1, testClass2 = Class:New("Test1"), Class:New("Test2")
+
+			expect(testClass1["New"] == testClass2["New"]).to.equal(true)
+			expect(testClass1["New"] == Class["New"]).to.equal(true)
+		end)
+
+		it("Each extended class should have the correct baseclass functions", function()
+			local testClass1, testClass2 = Class:New("Test1"):Extend("Test1Extend"), Class:New("Test2")
 
 			expect(testClass1["New"] == testClass2["New"]).to.equal(true)
 			expect(testClass1["New"] == Class["New"]).to.equal(true)
@@ -202,7 +209,7 @@ return function()
 			end).to.throw()
 		end)
 
-		it("Init function should fail with wrong class constructor", function()
+		it("Init function should fail with init function given", function()
 			local testClass = Class:New("Test")
 
 			testClass.testClass = 'asd'

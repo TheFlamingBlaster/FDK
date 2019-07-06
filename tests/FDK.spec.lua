@@ -37,4 +37,39 @@ return function()
 			expect(import("Class").Lock).to.be.ok()
 		end)
 	end)
+
+	describe("Function errors", function()
+		it("should fail with incorrect arguments in import", function()
+			expect(function()
+				import({ })
+			end).to.throw()
+		end)
+
+		it("should fail with nonexisent package", function()
+			expect(function()
+				import("bad.megabad")
+			end).to.throw()
+		end)
+
+		it("should fail bad modulescript", function()
+			expect(function()
+				import("FDKBadClass")
+			end).to.throw()
+		end)
+
+		it("should fail on incorrect Instance", function()
+			expect(function()
+				local newInstance = Instance.new("BoolValue")
+				newInstance.Parent = script.Parent
+
+				import("Value")
+			end).to.throw()
+		end)
+
+		it("should fail on incorrect arguments in WrapEnv", function()
+			expect(function()
+				FDk.WrapEnv(1)
+			end).to.throw()
+		end)
+	end)
 end
