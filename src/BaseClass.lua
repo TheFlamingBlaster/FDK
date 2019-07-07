@@ -224,6 +224,14 @@ BaseClass.registered = function(self, class)
 	return internal.classes[class ~= nil and class or self] ~= nil
 end
 
+--[[
+	Function: Allows unregistering classes
+	Arguments: self - the class to unregister
+]]
+BaseClass.unregister = function(self)
+	internal.classes[self] = nil
+end
+
 --Legacy Support
 BaseClass.Registered = BaseClass.registered
 BaseClass.IsA = BaseClass.isA

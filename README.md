@@ -41,7 +41,7 @@ The FDK module and base class should be located in ReplicatedStorage.
 ```lua
 local fdkModule = game:GetService("ReplicatedStorage"):FindFirstChild("FDK")
 local fdk = require(fdkModule)
-fdk.WrapEnv(getfenv()) -- Add the BaseClass Class and the Import function into the current enviroment.
+fdk:wrapEnvironment(getfenv()) -- Add the BaseClass Class and the Import function into the current enviroment.
 ```
 
 ## Usage
@@ -52,7 +52,8 @@ A basic "Hello, world!" class:
 -- In a package located in either ServerScriptService.ServerPackages or ReplicatedStorage.ClientPackages
 -- FDK will automatically provide packages based on the enviroment where the module is running.
 return function() 
-	local helloWorld = Class:New("HelloWorld")
+	local helloWorld = BaseClass:new("HelloWorld")
+
 	helloWorld.Hello = function()
 		print("Hello, world!")
 	end
@@ -66,7 +67,7 @@ In the script requiring FDK:
 ```lua
 local fdkModule = game:GetService("ReplicatedStorage"):FindFirstChild("FDK")
 local fdk = require(fdkModule)
-fdk.WrapEnv(getfenv()) -- Add the BaseClass Class and the Import function into the current enviroment.
+fdk.wrapEnvironment(getfenv()) -- Add the BaseClass Class and the Import function into the current enviroment.
 
 local helloWorld = import("HelloWorld")
 helloWorld.Hello() -- > Should print "Hello, world"
@@ -75,9 +76,9 @@ helloWorld.Hello() -- > Should print "Hello, world"
 Classes can have their variables carried over onto new classes by using the Extend() function of BaseClass.
 
 ```lua
-local originalClass = Class:New("OriginalClass")
+local originalClass = BaseClass:new("OriginalClass")
 originalClass.Demo = true
-local newClass = originalClass:Extend({})
+local newClass = originalClass:extend("ExtendedClass")
 print(newClass.Demo == true) --> Should return true.
 ```
 
@@ -85,12 +86,14 @@ Like many other programming languages, classes can be initalised:
 
 ```lua
 return function() 
-	initClass = Class:New("Init")
+	initClass = BaseClass:new("Init")
 	intClass.Init = function(newClass) -- The init function for a class is the same as the name of the class.
 		--newClass is the same is initClass:Extend({}). All of the variables added to the proto class are carried over into the new class
 		newClass.Initalised = true
-		retur newClass
+		return newClass
 	end
+
+	return initClass
 end
 ```
 
