@@ -59,7 +59,7 @@ FDK.import = function(self, importString)
 	local currentIndex, splitImportString, toRequire =
 		packages, { }, nil
 
-	for directory in string.gmatch(importString, "%a+") do
+	for directory in string.gmatch(importString, "%w+") do
 		table.insert(splitImportString, directory)
 	end
 
