@@ -38,6 +38,12 @@ return function()
 				expect(BaseClass:registered(TestClass)).to.equal(true)
 			end)
 
+			it("Unregister should work", function()
+				expect(function()
+					BaseClass:new("testA"):unregister()
+				end).never.to.throw()
+			end)
+
 			it("IsA should work", function()
 				expect(TestClass2:isA("TestClass")).to.equal(true)
 			end)
@@ -47,6 +53,7 @@ return function()
 			end)
 
 			describe("Metamethod", function()
+				TestClass2.__concat = function() return true end
 				TestClass2.__unm = function() return true end
 				TestClass2.__add = function() return true end
 				TestClass2.__sub = function() return true end
@@ -54,6 +61,10 @@ return function()
 				TestClass2.__div = function() return true end
 				TestClass2.__mod = function() return true end
 				TestClass2.__pow = function() return true end
+
+				it("Concat", function()
+					expect(TestClass2 .. '1').to.equal(true)
+				end)
 
 				it("Unary", function()
 					expect(-TestClass2).to.equal(true)
@@ -112,6 +123,23 @@ return function()
 				end
 
 				expect(TestClass:extend("ExtendTestClass2").testExtendFunction1()).to.equal(true)
+			end)
+
+			it("Should force extended function for forced functions", function()
+				local c1 = BaseClass:new("c1")
+
+				c1.testFunction1 = function()
+					return true
+				end
+
+				local c2 = c1:Extend("c2")
+
+				c2.testFunction1 = function()
+					return false
+				end
+
+				expect(c2.testFunction1()).to.equal(false)
+				expect(c2.BCF_testFunction1()).to.equal(true)
 			end)
 		end)
 
@@ -173,6 +201,10 @@ return function()
 			end)
 
 			describe("Metamethods", function()
+				it("Concat", function()
+					expect(LockedMetamethodClass .. '1').to.equal(true)
+				end)
+
 				it("Unary", function()
 					expect(-LockedMetamethodClass).to.equal(true)
 				end)

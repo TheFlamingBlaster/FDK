@@ -9,6 +9,8 @@ local internal = { }
 
 internal.classes = { }
 
+local forceString = "BCF_"
+
 
 --[[
 	Function: Checks the object against any types given. cleans code up
@@ -69,7 +71,7 @@ local function createProxyInterface(object)
 		end,
 
 		--Class Metamethods
-		__concact = tryGetMetatable(object, "__concat"),
+		__concat = tryGetMetatable(object, "__concat"),
 		__unm = tryGetMetatable(object, "__unm"),
 		__add = tryGetMetatable(object, "__add"),
 		__sub = tryGetMetatable(object, "__sub"),
@@ -183,6 +185,12 @@ BaseClass.extend = function(extender, className)
 	internal.classes[newClass].inherits[properties.className] = extender
 
 	getmetatable(newClass).__index = function(self, k)
+		if (string.sub(k, 1, string.len(forceString)) == forceString) then
+			if (extender[k:sub(string.len(forceString) + 1)]) then
+				return extender[k:sub(string.len(forceString) + 1)]
+			end
+		end
+
 		if (rawget(newClass, k)) then
 			return rawget(newClass, k)
 		end
