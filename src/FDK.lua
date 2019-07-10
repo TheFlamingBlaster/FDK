@@ -12,10 +12,14 @@ if (__LEMUR__ == nil) then
 		game:GetService("ReplicatedStorage"):FindFirstChild("ClientPackages") or
 		game:GetService("ServerScriptService"):FindFirstChild("ServerPackages"))
 
-	BaseClass = require(script.BaseClass)
+	BaseClass = require(script:FindFirstChild("BaseClass"))
 else
 	packages = script.Parent.Parent.tests
 	BaseClass = require(script.Parent.BaseClass)
+end
+
+if (BaseClass == nil or packages == nil) then
+	return error("[FDK - Structure] Failed to get BaseClass or packages")
 end
 
 local FDK = BaseClass:new("Flaming Development Toolkit")
@@ -86,7 +90,7 @@ FDK.import = function(self, importString)
 
 	self:wrapEnvironment(class)
 
-	return class(), currentIndex.Name -- Should we be calling the class?
+	return class(), currentIndex.Name
 end
 
 --[[
