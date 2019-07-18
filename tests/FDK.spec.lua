@@ -36,6 +36,13 @@ return function()
 		it("importing BaseClass should give BaseClass", function()
 			expect(import("BaseClass").lock).to.be.ok()
 		end)
+
+		it("importing mutiple classes should work", function()
+			local test1, test2 = import("FDKTestClass", "FDKTestClass")
+
+			expect(test1.testVar1).to.equal(1)
+			expect(test2.testVar1).to.equal(1)
+		end)
 	end)
 
 	describe("Function errors", function()

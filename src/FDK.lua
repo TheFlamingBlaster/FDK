@@ -45,52 +45,58 @@ end
 	Function: Creates a new class from the class name
 	Arguments: self - FDK, importString - what is wanted to be imported
 ]]
-FDK.import = function(self, importString)
-	if (not checkTypes(importString, "string") or string.len(importString) == 0) then
-		return error("[FDK - PACKAGE MANAGER] Expected string, got "..typeof(importString))
-	end
+FDK.import = function(self, ...)
+	local strings, returns = { ... }, { }
 
-	if (importString == "FDK") then
-		return external
-	elseif (importString == "BaseClass" or importString == "Class") then
-		return BaseClass
-	end
+	for index, importString in ipairs(strings) do
+		if (not checkTypes(importString, "string") or string.len(importString) == 0) then
+			return error("[FDK - PACKAGE MANAGER] Expected string, got " .. typeof(importString))
+		end
 
-	local currentIndex, splitImportString, toRequire =
-		packages, { }, nil
-
-	for directory in string.gmatch(importString, "%w+") do
-		table.insert(splitImportString, directory)
-	end
-
-	for _, directory in pairs(splitImportString) do
-		if (currentIndex:FindFirstChild(directory)) then
-			currentIndex = currentIndex[directory]
+		if (importString == "FDK") then
+			returns[index] = external
+		elseif (importString == "BaseClass" or importString == "Class") then
+			returns[index] = BaseClass
 		else
-			return error("[FDK - PACKAGE MANAGER] Package " .. directory .. " does not exist.")
+			local currentIndex, splitImportString, toRequire = 
+				packages, { }, nil
+
+			for directory in string.gmatch(importString, "%w+") do
+				table.insert(splitImportString, directory)
+			end
+
+			for _, directory in pairs(splitImportString) do
+				if (currentIndex:FindFirstChild(directory)) then
+					currentIndex = currentIndex[directory]
+				else
+					return error("[FDK - PACKAGE MANAGER] Package " .. directory .. " does not exist.")
+				end
+			end
+
+			if (currentIndex:IsA("NumberValue") or currentIndex:IsA("IntValue")) then
+				toRequire = currentIndex.Value
+			elseif (currentIndex:IsA("ModuleScript")) then
+				toRequire = currentIndex
+			end
+
+			if (toRequire == nil) then
+				return error("[FDK - PACKAGE MANAGER] Package does not exist.")
+			end
+
+			local class = require(toRequire)
+
+			if (not checkTypes(class, "table", "function")) then
+				return error("[FDK - PACKAGE MANAGER] Expected function or table, got "
+					.. typeof(class) .. " while initalizing class module.")
+			end
+
+			self:wrapEnvironment(class)
+
+			returns[index] = class()
 		end
 	end
 
-	if (currentIndex:IsA("NumberValue") or currentIndex:IsA("IntValue")) then
-		toRequire = currentIndex.Value
-	elseif (currentIndex:IsA("ModuleScript")) then
-		toRequire = currentIndex
-	end
-
-	if (toRequire == nil) then
-		return error("[FDK - PACKAGE MANAGER] Package does not exist.")
-	end
-
-	local class = require(toRequire)
-
-	if (not checkTypes(class, "table", "function")) then
-		return error("[FDK - PACKAGE MANAGER] Expected function or table, got "
-			.. typeof(class) .. " while initalizing class module.")
-	end
-
-	self:wrapEnvironment(class)
-
-	return class(), currentIndex.Name
+	return unpack(returns)
 end
 
 --[[
@@ -112,10 +118,8 @@ FDK.wrapEnvironment = function(self, value)
 		return error("[FDK - PACKAGE MANAGER] Expected function or table, got " .. typeof(functionEnviorment) .. ".")
 	end
 
-	functionEnviorment.import = function(importString)
-		local class, name = self:import(importString)
-
-		return class, name
+	functionEnviorment.import = function(...)
+		return self:import(...)
 	end
 
 	functionEnviorment.BaseClass = BaseClass
