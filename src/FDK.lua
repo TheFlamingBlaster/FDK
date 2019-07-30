@@ -58,7 +58,7 @@ FDK.import = function(self, ...)
 		elseif (importString == "BaseClass" or importString == "Class") then
 			returns[index] = BaseClass
 		else
-			local currentIndex, splitImportString, toRequire = 
+			local currentIndex, splitImportString, toRequire =
 				packages, { }, nil
 
 			for directory in string.gmatch(importString, "%w+") do
